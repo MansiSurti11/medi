@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Reminder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px; /* Space between each form group */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="time"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .hidden {
+            display: none; /* Hide elements by default */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="form-section">
+            <h1 id="form-title">Medicine Reminder Form</h1>
+            <form id="medicine-form">
+                <div class="form-group">
+                    <label id="label-language" for="language">Select Language:</label>
+                    <select id="language" name="language" onchange="changeLanguage()">
+                        <option value="en">English</option>
+                        <option value="hi">Hindi</option>
+                        <option value="gu">Gujarati</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label id="label-time" for="time">Enter Time:</label>
+                    <input type="time" id="time" name="time" required>
+                </div>
+
+                <div class="form-group">
+                    <label id="label-medicine-name" for="medicine-name">Enter Medicine Name:</label>
+                    <input type="text" id="medicine-name" name="medicine-name" required>
+                </div>
+
+                <div class="form-group">
+                    <label id="label-dosage" for="dosage">Enter Dosage:</label>
+                    <input type="text" id="dosage" name="dosage" required>
+                </div>
+
+                <div class="form-group">
+                    <label id="label-stock" for="stock">Enter Stock:</label>
+                    <input type="number" id="stock" name="stock" required>
+                </div>
+
+                <div class="form-group">
+                    <label id="label-threshold" for="threshold">Enter Threshold:</label>
+                    <input type="number" id="threshold" name="threshold" required>
+                </div>
+
+                <div class="form-group">
+                    <label id="label-expiration-date" for="expiration-date">Enter Expiration Date:</label>
+                    <input type="date" id="expiration-date" name="expiration-date" required>
+                </div>
+
+                <div class="form-group">
+                    <label id="label-alternatives" for="alternatives">Enter Alternatives:</label>
+                    <input type="text" id="alternatives" name="alternatives">
+                </div>
+
+                <button type="button" onclick="trackHistory()">Track History</button>
+            </form>
+        </div>
+
+        <div id="history-section" class="hidden">
+            <h1>Track History</h1>
+            <button onclick="window.location.href='stock_history.html'">Stock History</button>
+            <button onclick="window.location.href='medicine_history.html'">Medicine History</button>
+        </div>
+    </div>
+
+    <script>
+        function changeLanguage() {
+            const language = document.getElementById('language').value;
+
+            const translations = {
+                en: {
+                    title: "Medicine Reminder Form",
+                    labelLanguage: "Select Language:",
+                    labelTime: "Enter Time:",
+                    labelMedicineName: "Enter Medicine Name:",
+                    labelDosage: "Enter Dosage:",
+                    labelStock: "Enter Stock:",
+                    labelThreshold: "Enter Threshold:",
+                    labelExpirationDate: "Enter Expiration Date:",
+                    labelAlternatives: "Enter Alternatives:",
+                    trackHistory: "Track History"
+                },
+                hi: {
+                    title: "दवा अनुस्मारक फ़ॉर्म",
+                    labelLanguage: "भाषा चुनें:",
+                    labelTime: "समय दर्ज करें:",
+                    labelMedicineName: "दवा का नाम दर्ज करें:",
+                    labelDosage: "डोज दर्ज करें:",
+                    labelStock: "स्टॉक दर्ज करें:",
+                    labelThreshold: "थ्रेशोल्ड दर्ज करें:",
+                    labelExpirationDate: "समाप्ति तिथि दर्ज करें:",
+                    labelAlternatives: "वैकल्पिक दर्ज करें:",
+                    trackHistory: "इतिहास ट्रैक करें"
+                },
+                gu: {
+                    title: "દવા યાદી ફોર્મ",
+                    labelLanguage: "ભાષા પસંદ કરો:",
+                    labelTime: "સમય દાખલ કરો:",
+                    labelMedicineName: "દવા નું નામ દાખલ કરો:",
+                    labelDosage: "ડોઝ દાખલ કરો:",
+                    labelStock: "સ્ટોક દાખલ કરો:",
+                    labelThreshold: "થ્રેશોલ્ડ દાખલ કરો:",
+                    labelExpirationDate: "અવધિ તારીખ દાખલ કરો:",
+                    labelAlternatives: "વૈકલ્પિક દાખલ કરો:",
+                    trackHistory: "ઈતિહાસ ટ્રેક કરો"
+                }
+            };
+
+            // Update the text content based on selected language
+            document.getElementById('form-title').textContent = translations[language].title;
+            document.getElementById('label-language').textContent = translations[language].labelLanguage;
+            document.getElementById('label-time').textContent = translations[language].labelTime;
+            document.getElementById('label-medicine-name').textContent = translations[language].labelMedicineName;
+            document.getElementById('label-dosage').textContent = translations[language].labelDosage;
+            document.getElementById('label-stock').textContent = translations[language].labelStock;
+            document.getElementById('label-threshold').textContent = translations[language].labelThreshold;
+            document.getElementById('label-expiration-date').textContent = translations[language].labelExpirationDate;
+            document.getElementById('label-alternatives').textContent = translations[language].labelAlternatives;
+        }
+
+        function trackHistory() {
+            document.getElementById('form-section').classList.add('hidden');
+            document.getElementById('history-section').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
